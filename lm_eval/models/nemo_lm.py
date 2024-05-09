@@ -510,7 +510,8 @@ class NeMoLM(LM):
             contexts = []
             for context, _ in chunk:
                 encoded_context = self.tok_encode(context)
-                encoded_context = encoded_context[-remaining_length:]
+                if self.max_length - len(encoded_context) < max_gen_toks:
+                    encoded_context = encoded_context[-remaining_length:]
                 contexts.append(self.tok_decode(encoded_context))
 
             output = self.generate(
